@@ -87,3 +87,32 @@ Scientist UI: manifold viz, trajectories, pruning curves, temporal coherence
 - Technical report (PDF) covering architecture, pruning/temporal equations, and ablation results.
 - SpoonOS agent configs and scripts for reproducibility.
 - GitHub repo documenting workflows and commands for judges.
+
+## Running the demo pipeline
+The `synaptic_engine` package now includes executable components that reproduce the agent flow end-to-end with synthetic data.
+
+### 1) Install dependencies
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install numpy matplotlib scikit-learn
+```
+
+### 2) Execute the SpoonOS agent loop
+```bash
+python -m src.synaptic_engine.demo --windows 128 --output artifacts
+```
+This simulates EEG + biometric streams, encodes latents, builds a recursive hierarchy, prunes low-posterior branches, and applies temporal smoothing. Saved artifacts include:
+- `latent_trajectory.png`: PCA projection of latent dynamics.
+- `hierarchy.png`: pruned dendrogram view.
+- `temporal_coherence.png`: raw vs. smoothed state trajectories.
+
+### 3) Extend or swap components
+- Replace `SyntheticConfig` in `demo.py` with real data loaders to test hardware recordings.
+- Adjust `HierarchyConfig` to explore pruning thresholds, branch factors, and temporal windows.
+- Integrate additional modalities by extending `MultiModalEncoder.encode` with new fusion projections.
+
+### 4) Judge-facing experiments
+- Report average branch reduction (`~search-space`) and temporal stability printed by the demo.
+- Generate side-by-side runs with different pruning thresholds to showcase 7–8× reductions per layer.
+- Export the plots into your presentation deck to visualize manifold structure and smoothing benefits.
